@@ -22,3 +22,13 @@ sales_data['Total'] = sales_data['Total'].astype(float)
 
 print("### Data Types After Cleaning ###")
 print(sales_data.dtypes, "\n")
+
+# Data Exploration
+print("### Summary Statistics for Numerical Columns ###")
+print(sales_data.describe(), "\n")
+
+print("### Count of Each Product Line ###")
+print(sales_data['Product line'].value_counts(), "\n")
+
+print("### Count of Sales by City ###")
+print(sales_data['City'].value_counts(), "\n")
