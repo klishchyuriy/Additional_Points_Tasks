@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 # Load the dataset
 file_path = 'supermarket_sales.csv'
@@ -54,3 +55,45 @@ print(top_products, "\n")
 
 print("### Top Performing Regions by Total Sales ###")
 print(top_regions, "\n")
+
+# Hypothesis Testing (Optional)
+np.random.seed(0)
+sales_data['Promotion'] = np.random.choice([0, 1], size=len(sales_data))
+sales_data['Season'] = np.random.choice(['Spring', 'Summer', 'Autumn', 'Winter'], size=len(sales_data))
+print("### DataFrame with New Columns ###")
+print(sales_data.head(10), "\n")
+
+def calculate_test(sample1, sample2):
+    # Calculate the means
+    mean1, mean2 = np.mean(sample1), np.mean(sample2)
+
+    # Calculate the standard deviations
+    std1, std2 = np.std(sample1, ddof=1), np.std(sample2, ddof=1)
+
+    # Calculate the sample sizes
+    n1, n2 = len(sample1), len(sample2)
+
+    # Calculate the standard error of the difference in means
+    sed = np.sqrt((std1 ** 2 / n1) + (std2 ** 2 / n2))
+
+    # Calculate the t-statistic
+    t_statistic = (mean1 - mean2) / sed
+
+    # Degrees of freedom
+    degrees_of_freedom = n1 + n2 - 2
+
+    return t_statistic, degrees_of_freedom
+
+# Hypothesis 1: Sales are higher during promotional campaigns
+promotional_sales = sales_data[sales_data['Promotion'] == 1]['Total']
+non_promotional_sales = sales_data[sales_data['Promotion'] == 0]['Total']
+
+t_stat_promotion, df_promotion = calculate_test(promotional_sales, non_promotional_sales)
+print(f"T-statistic (Promotion): {t_stat_promotion}, Degrees of freedom (Promotion): {df_promotion}")
+
+# Hypothesis 2: Sales differ by seasons
+spring_sales = sales_data[sales_data['Season'] == 'Spring']['Total']
+summer_sales = sales_data[sales_data['Season'] == 'Summer']['Total']
+
+t_stat_season, df_season = calculate_test(spring_sales, summer_sales)
+print(f"T-statistic (Season): {t_stat_season}, Degrees of freedom (Season): {df_season}")
